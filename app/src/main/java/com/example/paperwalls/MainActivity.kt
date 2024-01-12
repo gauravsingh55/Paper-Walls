@@ -31,5 +31,16 @@ class MainActivity : AppCompatActivity() {
         )
         //setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        val customToolbar = layoutInflater.inflate(R.layout.custom_toolbar, null)
+
+        // Set your custom layout as the custom view for the Toolbar
+        toolbar.addView(customToolbar)
+
+        // Customize other Toolbar settings as needed
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
     }
 }
