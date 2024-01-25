@@ -46,8 +46,9 @@ class SplashActivity : AppCompatActivity() {
                     // Delay for an additional 300 milliseconds
                     Handler().postDelayed({
                         // Start MainActivity
-                        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                        startActivity(Intent(this@SplashActivity, MainActivity::class.java),null)
                         finish() // finish the current activity
+                        overridePendingTransition(0, 0)
                     }, 100)
                 }
 
