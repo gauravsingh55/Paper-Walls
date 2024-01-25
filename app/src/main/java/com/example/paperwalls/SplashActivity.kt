@@ -8,46 +8,36 @@ import android.os.Handler
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 
+@SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        // Get references to TextView and ImageView
-        val appNameTextView: TextView = findViewById(R.id.appName_text)
-        val logoImageView: ImageView = findViewById(R.id.logo)
-        val byAuthorTextView: TextView = findViewById(R.id.author_text)
+        val constraintLayout: ConstraintLayout = findViewById(R.id.splash_screen)
 
         // Introduce a delay before starting the fade-out animation
         Handler().postDelayed({
-            // Load fade-out animation
+
+            // Apply fade-out animation
             val fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out)
+            constraintLayout.startAnimation(fadeOut)
 
-            // Apply fade-out animation to TextView and ImageView
-            appNameTextView.startAnimation(fadeOut)
-            logoImageView.startAnimation(fadeOut)
-            byAuthorTextView.startAnimation(fadeOut)
-
-            // Set AnimationListener on fade-out animation
+            // Start MainActivity once the animation is done
             fadeOut.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation) {}
 
                 override fun onAnimationEnd(animation: Animation) {
-                    // Set the visibility of elements to INVISIBLE
-                    appNameTextView.visibility = View.INVISIBLE
-                    logoImageView.visibility = View.INVISIBLE
-                    byAuthorTextView.visibility = View.INVISIBLE
 
-                    // Delay for an additional 300 milliseconds
+                    constraintLayout.visibility = View.INVISIBLE
+
+                    // add a delay before starting the main activity
                     Handler().postDelayed({
-                        // Start MainActivity
                         startActivity(Intent(this@SplashActivity, MainActivity::class.java),null)
-                        finish() // finish the current activity
+                        finish()
                         overridePendingTransition(0, 0)
                     }, 100)
                 }
@@ -55,6 +45,6 @@ class SplashActivity : AppCompatActivity() {
                 override fun onAnimationRepeat(animation: Animation) {}
             })
 
-        }, 500) // Delay for 500 milliseconds before starting the fade-out animation
+        }, 500)
     }
 }
