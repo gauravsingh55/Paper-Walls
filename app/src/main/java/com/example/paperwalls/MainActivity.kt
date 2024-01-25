@@ -1,8 +1,10 @@
 package com.example.paperwalls
 
 import android.os.Bundle
+import android.view.animation.AnimationUtils
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -15,6 +17,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -39,5 +43,10 @@ class MainActivity : AppCompatActivity() {
         // Customize other Toolbar settings as needed
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        // Fade in effect
+        val constraintLayout: ConstraintLayout = findViewById(R.id.container)
+        val fadeInActivity = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+        constraintLayout.startAnimation(fadeInActivity)
     }
 }
