@@ -1,13 +1,13 @@
-package com.example.paperwalls.ui.dashboard
+package com.example.paperwalls.ui.walls
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class DashboardViewModel : ViewModel() {
+class WallsViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
+        value = "This is My Walls Fragment"
     }
     val text: LiveData<String> = _text
 }
