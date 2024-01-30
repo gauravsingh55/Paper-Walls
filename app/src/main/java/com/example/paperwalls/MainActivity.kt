@@ -9,28 +9,34 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.example.paperwalls.databinding.ActivityMainBinding
+import nl.joery.animatedbottombar.AnimatedBottomBar
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var bottomBar: AnimatedBottomBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navView: BottomNavigationView = binding.navView
-
+        val bottomBar = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
-        // Passing each menu ID as a set of Ids
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_walls, R.id.navigation_profile
-            )
-        )
-        navView.setupWithNavController(navController)
+        bottomBar.onTabSelected = { tab ->
+            when (tab.id) {
+                R.id.navigation_home -> navController.navigate(R.id.navigation_home)
+                R.id.navigation_walls -> navController.navigate(R.id.navigation_walls)
+                R.id.navigation_profile -> navController.navigate(R.id.navigation_profile)
+            }
+        }
+
+        bottomBar.onTabReselected = { tab ->
+            // Handle tab reselected event
+        }
+
 
 
         // Fade in effect

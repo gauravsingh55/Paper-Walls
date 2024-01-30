@@ -24,7 +24,7 @@
         app:navGraph="@navigation/mobile_navigation" />
 
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <nl.joery.animatedbottombar.AnimatedBottomBar
         android:id="@+id/nav_view"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -36,7 +36,14 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:abb_selectedTabType="text"
+        app:abb_indicatorAppearance="round"
+        app:abb_indicatorMargin="16dp"
+        app:abb_indicatorHeight="4dp"
+        app:abb_tabs="@menu/bottom_nav_menu"
+        app:abb_selectedIndex="1"/>
+
+
 
 
 
