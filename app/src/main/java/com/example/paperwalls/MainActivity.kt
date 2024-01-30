@@ -33,14 +33,6 @@ class MainActivity : AppCompatActivity() {
         )
         navView.setupWithNavController(navController)
 
-        // Find Create a custom layout for the Toolbar
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-        val customToolbar = layoutInflater.inflate(R.layout.custom_toolbar, null)
-        toolbar.addView(customToolbar)
-
-        // Customize other Toolbar settings as needed
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         // Fade in effect
         val constraintLayout: ConstraintLayout = findViewById(R.id.container)
