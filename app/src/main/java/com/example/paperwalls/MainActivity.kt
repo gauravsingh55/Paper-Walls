@@ -2,12 +2,9 @@ package com.example.paperwalls
 
 import android.os.Bundle
 import android.view.animation.AnimationUtils
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import com.example.paperwalls.databinding.ActivityMainBinding
 import nl.joery.animatedbottombar.AnimatedBottomBar
 
@@ -22,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val bottomBar = binding.navView
+        bottomBar = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
         bottomBar.onTabSelected = { tab ->
