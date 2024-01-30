@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="navBar_text">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">@font/n_bold</item>
+    </style>
+</resources>
