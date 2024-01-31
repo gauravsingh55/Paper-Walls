@@ -1,13 +1,13 @@
-package com.example.paperwalls.ui.profile
+package com.example.paperwalls.ui.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class ProfileViewModel : ViewModel() {
+class SearchViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is Profile Fragment"
+        value = "This is Search Fragment"
     }
     val text: LiveData<String> = _text
 }

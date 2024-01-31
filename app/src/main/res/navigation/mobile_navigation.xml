@@ -18,8 +18,8 @@
         tools:layout="@layout/fragment_walls" />
 
     <fragment
-        android:id="@+id/navigation_profile"
-        android:name="com.example.paperwalls.ui.profile.ProfileFragment"
-        android:label="@string/title_profile"
-        tools:layout="@layout/fragment_profile" />
+        android:id="@+id/navigation_search"
+        android:name="com.example.paperwalls.ui.search.SearchFragment"
+        android:label="@string/title_Search"
+        tools:layout="@layout/fragment_search" />
 </navigation>

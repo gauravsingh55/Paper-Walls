@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
             when (tab.id) {
                 R.id.navigation_home -> navController.navigate(R.id.navigation_home)
                 R.id.navigation_walls -> navController.navigate(R.id.navigation_walls)
-                R.id.navigation_profile -> navController.navigate(R.id.navigation_profile)
+                R.id.navigation_search -> navController.navigate(R.id.navigation_search)
             }
         }
 
