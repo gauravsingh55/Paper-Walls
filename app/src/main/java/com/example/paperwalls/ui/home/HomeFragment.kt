@@ -55,12 +55,10 @@ class HomeFragment : Fragment() {
 
         // Check if directory is selected
         if (!isDirectorySelected(requireContext())) {
-
-
             // If not, initiate the document tree selection
             openDocumentTree()
         } else {
-            // Directory already selected, proceed with your logic
+            // Directory already selected, proceed with logic
             selectedDirectoryUri = getSelectedDirectory(requireContext())
             if (selectedDirectoryUri != null) {
                 handleSelectedDirectory(selectedDirectoryUri!!)
