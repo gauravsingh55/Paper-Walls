@@ -1,6 +1,7 @@
 package com.example.paperwalls.ui.home
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -52,12 +53,15 @@ class HomeFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Check if directory is selected
-        if (selectedDirectoryUri == null) {
+        if (!isDirectorySelected(requireContext())) {
             // If not, initiate the document tree selection
             openDocumentTree()
         } else {
             // Directory already selected, proceed with your logic
-            handleSelectedDirectory(selectedDirectoryUri!!)
+            selectedDirectoryUri = getSelectedDirectory(requireContext())
+            if (selectedDirectoryUri != null) {
+                handleSelectedDirectory(selectedDirectoryUri!!)
+            }
         }
 
 
@@ -70,10 +74,6 @@ class HomeFragment : Fragment() {
         return root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 
     private fun openDocumentTree() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
@@ -112,6 +112,43 @@ class HomeFragment : Fragment() {
     private fun setupRecyclerView(imageList: List<ImageModel>) {
         imageAdapter = ImageAdapter(imageList)
         recyclerView.adapter = imageAdapter
+    }
+
+    private fun isDirectorySelected(context: Context): Boolean {
+        val sharedPreferences = context.getSharedPreferences(
+            "DirectoryPreferences",
+            Context.MODE_PRIVATE
+        )
+        return sharedPreferences.getBoolean("directorySelected", false)
+    }
+
+    private fun saveDirectorySelectedStatus(context: Context, status: Boolean) {
+        val sharedPreferences = context.getSharedPreferences(
+            "DirectoryPreferences",
+            Context.MODE_PRIVATE
+        )
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("directorySelected", status)
+        editor.apply()
+    }
+
+    private fun getSelectedDirectory(context: Context): Uri? {
+        val sharedPreferences = context.getSharedPreferences(
+            "DirectoryPreferences",
+            Context.MODE_PRIVATE
+        )
+        val uriString = sharedPreferences.getString("selectedDirectoryUri", null)
+        return uriString?.let { Uri.parse(it) }
+    }
+
+    private fun saveSelectedDirectory(context: Context, uri: Uri) {
+        val sharedPreferences = context.getSharedPreferences(
+            "DirectoryPreferences",
+            Context.MODE_PRIVATE
+        )
+        val editor = sharedPreferences.edit()
+        editor.putString("selectedDirectoryUri", uri.toString())
+        editor.apply()
     }
 
 }
