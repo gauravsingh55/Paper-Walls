@@ -1,5 +1,6 @@
 package com.example.paperwalls
 
+
 import android.os.Bundle
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var bottomBar: AnimatedBottomBar
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,4 +43,7 @@ class MainActivity : AppCompatActivity() {
         val fadeInActivity = AnimationUtils.loadAnimation(this, R.anim.fade_in)
         constraintLayout.startAnimation(fadeInActivity)
     }
+
+
+
 }

@@ -55,4 +55,7 @@ dependencies {
 
     implementation("nl.joery.animatedbottombar:library:1.1.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
 }

@@ -6,13 +6,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+
 import com.example.paperwalls.R
 import com.example.paperwalls.models.ImageModel
 
 class ImageAdapter(private var imageList: List<ImageModel>) : RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageView: ImageView = itemView.findViewById(R.id.image_card_view)
+        val imageView: ImageView = itemView.findViewById(R.id.image_card)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -21,10 +22,9 @@ class ImageAdapter(private var imageList: List<ImageModel>) : RecyclerView.Adapt
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val imageModel = imageList[position]
+        val imageUri = imageList[position]
         Glide.with(holder.itemView.context)
-            .load(imageModel.imagePath)
-            .centerCrop()
+            .load(imageUri)
             .into(holder.imageView)
     }
 

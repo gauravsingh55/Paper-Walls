@@ -1,3 +1,11 @@
 package com.example.paperwalls.models
 
-data class ImageModel(val imagePath: String){}
+import android.net.Uri
+
+// ImageModel.kt
+
+data class ImageModel(
+    val id: Long,          // Unique identifier for the image
+    val uri: Uri           // URI of the image
+)
+
