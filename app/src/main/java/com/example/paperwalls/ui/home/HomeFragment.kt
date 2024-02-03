@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,6 +55,8 @@ class HomeFragment : Fragment() {
 
         // Check if directory is selected
         if (!isDirectorySelected(requireContext())) {
+
+
             // If not, initiate the document tree selection
             openDocumentTree()
         } else {
@@ -63,6 +66,8 @@ class HomeFragment : Fragment() {
                 handleSelectedDirectory(selectedDirectoryUri!!)
             }
         }
+
+
 
 
         // Find Create a custom layout for the Toolbar
@@ -83,15 +88,22 @@ class HomeFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        Log.d("HomeFragment", "onActivityResult - requestCode: $requestCode, resultCode: $resultCode")
+
         if (requestCode == OPEN_DIRECTORY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             data?.data?.let { uri ->
+                Log.d("HomeFragment", "Selected directory URI: $uri")
                 // Save the selected directory URI for future access
                 selectedDirectoryUri = uri
+                // Save the fact that the directory is selected
+                saveDirectorySelectedStatus(requireContext(), true)
+                saveSelectedDirectory(requireContext(), uri)
                 // Handle the selected directory
                 handleSelectedDirectory(uri)
             }
         }
     }
+
 
     private fun handleSelectedDirectory(uri: Uri) {
         // Use the document URI to access the selected directory

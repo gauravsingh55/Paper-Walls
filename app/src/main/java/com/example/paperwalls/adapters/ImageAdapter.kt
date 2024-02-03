@@ -10,19 +10,19 @@ import com.bumptech.glide.Glide
 import com.example.paperwalls.R
 import com.example.paperwalls.models.ImageModel
 
-class ImageAdapter(private var imageList: List<ImageModel>) : RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
+class ImageAdapter(private var imageList: List<ImageModel>) : RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.image_card)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_image_card, parent, false)
-        return ViewHolder(view)
+        return ImageViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val imageUri = imageList[position]
+    override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
+        val imageUri = imageList[position].uri
         Glide.with(holder.itemView.context)
             .load(imageUri)
             .into(holder.imageView)

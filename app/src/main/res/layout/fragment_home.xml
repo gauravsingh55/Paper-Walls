@@ -27,7 +27,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/recyclerView"/>
+            android:id="@+id/recyclerView"
+            android:visibility="visible"/>
 
     </LinearLayout>
 
