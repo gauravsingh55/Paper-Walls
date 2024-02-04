@@ -1,16 +1,22 @@
 package com.example.paperwalls.ui.home
 
-import android.app.Activity
-import android.content.Context
+
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import android.os.Environment
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.documentfile.provider.DocumentFile
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import android.content.pm.PackageManager
+
+
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +25,7 @@ import com.example.paperwalls.R
 import com.example.paperwalls.adapters.ImageAdapter
 import com.example.paperwalls.databinding.FragmentHomeBinding
 import com.example.paperwalls.models.ImageModel
+import java.io.File
 
 class HomeFragment : Fragment() {
 
@@ -28,8 +35,9 @@ class HomeFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private val OPEN_DIRECTORY_REQUEST_CODE = 123
-    private var selectedDirectoryUri: Uri? = null
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+    private val directoryPath = Environment.getExternalStorageDirectory().absolutePath + "/Wallpapers"
+
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var imageAdapter: ImageAdapter
@@ -50,20 +58,29 @@ class HomeFragment : Fragment() {
             textView.text = it
         }
 
-        recyclerView = binding.recyclerView
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        // Check if directory is selected
-        if (!isDirectorySelected(requireContext())) {
-            // If not, initiate the document tree selection
-            openDocumentTree()
-        } else {
-            // Directory already selected, proceed with logic
-            selectedDirectoryUri = getSelectedDirectory(requireContext())
-            if (selectedDirectoryUri != null) {
-                handleSelectedDirectory(selectedDirectoryUri!!)
+        requestPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+                if (isGranted) {
+                    // Permission granted, access the directory
+                    accessDirectory()
+                } else {
+                    // Permission denied
+                    // Handle the denial case as needed
+                }
             }
+
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permission already granted
+            accessDirectory()
+        } else {
+            // Request permission
+            requestPermissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
         }
+
 
 
 
@@ -77,88 +94,58 @@ class HomeFragment : Fragment() {
         return root
     }
 
+    private fun populateRecyclerView(imageList: List<ImageModel>) {
+        val recyclerView: RecyclerView = requireView().findViewById(R.id.recyclerView)
+        val adapter = ImageAdapter(imageList)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = adapter
+    }
 
-    private fun openDocumentTree() {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-        startActivityForResult(intent, OPEN_DIRECTORY_REQUEST_CODE)
+
+    private fun accessDirectory() {
+        val directory = File(directoryPath)
+        if (directory.exists() && directory.isDirectory) {
+            val imageList = mutableListOf<ImageModel>()
+
+            // Filter only image files (you can adjust the extensions based on your needs)
+            val imageFiles = directory.listFiles { file ->
+                file.isFile && file.extension in arrayOf("jpg", "jpeg", "png")
+            }
+
+            imageFiles?.forEachIndexed { index, file ->
+                val imageUri = Uri.fromFile(file)
+                val imageModel = ImageModel(index.toLong(), imageUri)
+                imageList.add(imageModel)
+            }
+
+            // Now, you have a list of ImageModel objects containing image URIs
+            // You can use this list to populate your RecyclerView
+            populateRecyclerView(imageList)
+        } else {
+            // Handle the case where the directory doesn't exist
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        Log.d("HomeFragment", "onActivityResult - requestCode: $requestCode, resultCode: $resultCode")
-
-        if (requestCode == OPEN_DIRECTORY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            data?.data?.let { uri ->
-                Log.d("HomeFragment", "Selected directory URI: $uri")
-                // Save the selected directory URI for future access
-                selectedDirectoryUri = uri
-                // Save the fact that the directory is selected
-                saveDirectorySelectedStatus(requireContext(), true)
-                saveSelectedDirectory(requireContext(), uri)
-                // Handle the selected directory
-                handleSelectedDirectory(uri)
+        if (requestCode == OPEN_DIRECTORY_REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK) {
+            // Handle the result from SAF
+            data?.data?.also { uri ->
+                // Use the URI to access the selected directory
+                // ...
             }
         }
     }
 
-
-    private fun handleSelectedDirectory(uri: Uri) {
-        // Use the document URI to access the selected directory
-        val documentTree = DocumentFile.fromTreeUri(requireContext(), uri)
-
-        // Example: List all files in the selected directory
-        val imageList = documentTree?.listFiles()?.filter { file ->
-            file.type?.startsWith("image/") == true
-        }?.mapIndexed { index, file ->
-            ImageModel(index.toLong(), file.uri)
-        }
-
-        if (imageList != null) {
-            setupRecyclerView(imageList)
-        }
+    companion object {
+        private const val OPEN_DIRECTORY_REQUEST_CODE = 42 // Any unique value
     }
 
-    private fun setupRecyclerView(imageList: List<ImageModel>) {
-        imageAdapter = ImageAdapter(imageList)
-        recyclerView.adapter = imageAdapter
-    }
 
-    private fun isDirectorySelected(context: Context): Boolean {
-        val sharedPreferences = context.getSharedPreferences(
-            "DirectoryPreferences",
-            Context.MODE_PRIVATE
-        )
-        return sharedPreferences.getBoolean("directorySelected", false)
-    }
 
-    private fun saveDirectorySelectedStatus(context: Context, status: Boolean) {
-        val sharedPreferences = context.getSharedPreferences(
-            "DirectoryPreferences",
-            Context.MODE_PRIVATE
-        )
-        val editor = sharedPreferences.edit()
-        editor.putBoolean("directorySelected", status)
-        editor.apply()
-    }
 
-    private fun getSelectedDirectory(context: Context): Uri? {
-        val sharedPreferences = context.getSharedPreferences(
-            "DirectoryPreferences",
-            Context.MODE_PRIVATE
-        )
-        val uriString = sharedPreferences.getString("selectedDirectoryUri", null)
-        return uriString?.let { Uri.parse(it) }
-    }
 
-    private fun saveSelectedDirectory(context: Context, uri: Uri) {
-        val sharedPreferences = context.getSharedPreferences(
-            "DirectoryPreferences",
-            Context.MODE_PRIVATE
-        )
-        val editor = sharedPreferences.edit()
-        editor.putString("selectedDirectoryUri", uri.toString())
-        editor.apply()
-    }
+
+
 
 }
