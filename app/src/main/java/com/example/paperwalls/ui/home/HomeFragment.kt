@@ -69,19 +69,6 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-    /** private fun getDirectoryPath(uri: Uri): String {
-        val isDirectory = DocumentsContract.Document.MIME_TYPE_DIR == requireContext().contentResolver.getType(uri)
-        if (isDirectory) {
-            val documentId = DocumentsContract.getDocumentId(uri)
-            val split = documentId.split(":").toTypedArray()
-            return split[1]
-        } else {
-            // Handle the case where a file is selected instead of a directory
-            // You may want to show a message to the user or handle it in a way that fits your app
-            Toast.makeText(requireContext(), "Please select a directory", Toast.LENGTH_SHORT).show()
-            return ""
-        }
-    }**/
 
 
     override fun onCreateView(
