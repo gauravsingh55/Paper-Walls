@@ -1,6 +1,7 @@
 package com.example.paperwalls
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
@@ -42,6 +43,14 @@ class MainActivity : AppCompatActivity() {
         val constraintLayout: ConstraintLayout = findViewById(R.id.container)
         val fadeInActivity = AnimationUtils.loadAnimation(this, R.anim.fade_in)
         constraintLayout.startAnimation(fadeInActivity)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        supportFragmentManager.fragments.forEach { fragment ->
+            fragment.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
 

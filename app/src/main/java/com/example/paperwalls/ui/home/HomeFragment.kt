@@ -27,7 +27,9 @@ import com.example.paperwalls.databinding.FragmentHomeBinding
 import com.example.paperwalls.models.ImageModel
 import android.content.pm.PackageManager
 import android.database.Cursor
+import android.os.Build
 import android.provider.MediaStore
+import androidx.annotation.RequiresApi
 
 
 class HomeFragment : Fragment() {
@@ -71,6 +73,7 @@ class HomeFragment : Fragment() {
         }
 
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -113,17 +116,21 @@ class HomeFragment : Fragment() {
 
     private fun getDirectoryPath(uri: Uri): String {
         val isDirectory = DocumentsContract.Document.MIME_TYPE_DIR == requireContext().contentResolver.getType(uri)
-        if (isDirectory) {
+        return if (isDirectory) {
             val documentId = DocumentsContract.getDocumentId(uri)
             val split = documentId.split(":").toTypedArray()
-            return split[1]
+            Toast.makeText(requireContext(),"DONE", Toast.LENGTH_SHORT).show()
+            split[1]
         } else {
             // Handle the case where a file is selected instead of a directory
             // You may want to show a message to the user or handle it in a way that fits your app
             Toast.makeText(requireContext(), "Please select a directory", Toast.LENGTH_SHORT).show()
-            return ""
+            ""
         }
     }
+
+
+
     private fun getImagesFromDirectory(directoryPath: String, context: Context): List<ImageModel> {
         val images = mutableListOf<ImageModel>()
 
@@ -134,7 +141,7 @@ class HomeFragment : Fragment() {
         )
 
         val selection = "${MediaStore.Images.Media.DATA} LIKE ?"
-        val selectionArgs = arrayOf("%$directoryPath%")
+        val selectionArgs = arrayOf("$directoryPath%")
         val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
 
         context.contentResolver.query(
