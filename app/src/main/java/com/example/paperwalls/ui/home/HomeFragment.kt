@@ -8,18 +8,15 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.DocumentsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.paperwalls.R
 import com.example.paperwalls.adapters.ImageAdapter
@@ -30,7 +27,6 @@ import android.database.Cursor
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import androidx.annotation.RequiresApi
 import java.io.File
 
@@ -103,7 +99,7 @@ class HomeFragment : Fragment() {
         }
 
 
-            // Find Create a custom layout for the Toolbar
+        // Find Create a custom layout for the Toolbar
         val toolbar = binding.toolbar
         val customToolbar = layoutInflater.inflate(R.layout.custom_toolbar, null)
         toolbar.addView(customToolbar)
@@ -117,33 +113,7 @@ class HomeFragment : Fragment() {
         pickDirectoryLauncher.launch(intent)
     }
 
-    /**private fun getDirectoryPath(uri: Uri?): String {
-        if (uri == null) {
-            // Handle the case where the URI is null (no directory selected)
-            Toast.makeText(requireContext(), "No directory selected", Toast.LENGTH_SHORT).show()
-            return ""
-        }
 
-        val isDirectory = DocumentsContract.Document.MIME_TYPE_DIR == requireContext().contentResolver.getType(uri)
-        return if (isDirectory) {
-            try {
-                val documentId = DocumentsContract.getDocumentId(uri)
-                val decodedUri = Uri.decode(documentId)
-                val split = decodedUri.split(":").toTypedArray()
-                Toast.makeText(requireContext(), "DONE", Toast.LENGTH_SHORT).show()
-                split.getOrNull(1) ?: ""
-            } catch (e: Exception) {
-                // Handle any potential exceptions (e.g., if the URI is not in the expected format)
-                Toast.makeText(requireContext(), "Invalid directory format", Toast.LENGTH_SHORT).show()
-                ""
-            }
-        } else {
-            // Handle the case where a file is selected instead of a directory
-            // You may want to show a message to the user or handle it in a way that fits your app
-            Toast.makeText(requireContext(), "Please select a directory", Toast.LENGTH_SHORT).show()
-            ""
-        }
-    }**/
 
     private fun getDirectoryPath(uri: Uri?): String {
         if (uri == null) {
