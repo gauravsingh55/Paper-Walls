@@ -28,9 +28,11 @@ import com.example.paperwalls.models.ImageModel
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import androidx.annotation.RequiresApi
+import java.io.File
 
 
 class HomeFragment : Fragment() {
@@ -115,20 +117,78 @@ class HomeFragment : Fragment() {
         pickDirectoryLauncher.launch(intent)
     }
 
-    private fun getDirectoryPath(uri: Uri): String {
+    /**private fun getDirectoryPath(uri: Uri?): String {
+        if (uri == null) {
+            // Handle the case where the URI is null (no directory selected)
+            Toast.makeText(requireContext(), "No directory selected", Toast.LENGTH_SHORT).show()
+            return ""
+        }
+
         val isDirectory = DocumentsContract.Document.MIME_TYPE_DIR == requireContext().contentResolver.getType(uri)
         return if (isDirectory) {
-            val documentId = DocumentsContract.getDocumentId(uri)
-            val split = documentId.split(":").toTypedArray()
-            Toast.makeText(requireContext(),"DONE", Toast.LENGTH_SHORT).show()
-            split[1]
+            try {
+                val documentId = DocumentsContract.getDocumentId(uri)
+                val decodedUri = Uri.decode(documentId)
+                val split = decodedUri.split(":").toTypedArray()
+                Toast.makeText(requireContext(), "DONE", Toast.LENGTH_SHORT).show()
+                split.getOrNull(1) ?: ""
+            } catch (e: Exception) {
+                // Handle any potential exceptions (e.g., if the URI is not in the expected format)
+                Toast.makeText(requireContext(), "Invalid directory format", Toast.LENGTH_SHORT).show()
+                ""
+            }
         } else {
             // Handle the case where a file is selected instead of a directory
             // You may want to show a message to the user or handle it in a way that fits your app
             Toast.makeText(requireContext(), "Please select a directory", Toast.LENGTH_SHORT).show()
             ""
         }
+    }**/
+
+    private fun getDirectoryPath(uri: Uri?): String {
+        if (uri == null) {
+            // Handle the case where the URI is null (no directory selected)
+            Toast.makeText(requireContext(), "No directory selected", Toast.LENGTH_SHORT).show()
+            return ""
+        }
+
+        try {
+            // Get the last segment of the URI as the directory path
+            val directoryPath = uri.lastPathSegment ?: ""
+
+            if (directoryPath.isNotEmpty()) {
+                // Split the path using ":" and get the segment after "primary"
+                val segments = directoryPath.split(":")
+                val pathAfterPrimary = if (segments.size > 1) segments[1] else segments[0]
+
+                // Get the root directory of external storage
+                val rootDirectory = Environment.getExternalStorageDirectory()
+
+                // Append the directory path to get the absolute path
+                val absolutePath = File(rootDirectory, pathAfterPrimary).absolutePath
+
+                Toast.makeText(requireContext(), "DONE: $absolutePath", Toast.LENGTH_SHORT).show()
+
+                return absolutePath
+            }
+        } catch (e: Exception) {
+            // Handle any potential exceptions
+        }
+
+        // Handle the case where a file is selected instead of a directory
+        Toast.makeText(requireContext(), "Please select a directory", Toast.LENGTH_SHORT).show()
+        return ""
     }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -165,14 +225,4 @@ class HomeFragment : Fragment() {
 
         return images
     }
-
-
-    private fun populateRecyclerView(imageList: List<ImageModel>) {
-        val recyclerView: RecyclerView = requireView().findViewById(R.id.recyclerView) // Replace with your RecyclerView ID
-        val layoutManager = GridLayoutManager(requireContext(), 2) // 2 columns
-        recyclerView.layoutManager = layoutManager
-        val adapter = ImageAdapter(imageList)
-        recyclerView.adapter = adapter
-    }
-
 }
