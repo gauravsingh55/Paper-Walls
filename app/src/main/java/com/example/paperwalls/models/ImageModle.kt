@@ -4,6 +4,9 @@ package com.example.paperwalls.models
 
 data class ImageModel(
     val id: Long,          // Unique identifier for the image
-    val uri: String           // URI of the image
+    val uri: String
+
+
+// URI of the image
 )
 

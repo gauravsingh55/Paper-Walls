@@ -22,7 +22,7 @@ class ImageAdapter(private var imageList: List<ImageModel>) : RecyclerView.Adapt
     }
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
-        val imageUri = imageList?.get(position)?.uri
+        val imageUri = imageList[position].uri
         Glide.with(holder.itemView.context)
             .load(imageUri)
             .into(holder.imageView)

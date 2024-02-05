@@ -64,7 +64,7 @@ class HomeFragment : Fragment() {
                     val directoryPath = getDirectoryPath(uri)
                     imageList = getImagesFromDirectory(directoryPath,requireContext())
                     recyclerView = requireView().findViewById(R.id.recyclerView)
-                    recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                    recyclerView.layoutManager = GridLayoutManager(requireContext(),2)
                     recyclerView.adapter = ImageAdapter(imageList)
                 }
             }
