@@ -52,7 +52,4 @@ class MainActivity : AppCompatActivity() {
             fragment.onActivityResult(requestCode, resultCode, data)
         }
     }
-
-
-
 }
